@@ -1,9 +1,10 @@
 package org.jediassessments.galacticstandardcalendar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -18,12 +19,22 @@ public class GalacticStandardCalendarServiceTest {
 
 	@Inject
 	GalacticStandardCalendarService service;
-	
+
 	@Test
 	public void nowFunTest() {
-		Multi<GalacticDate> now = service.now(LocalDate.now());
+		Multi<GalacticDate> now = service.now(Instant.now(), 2);
 		assertNotNull(now);
 		assertEquals("[GalacticDate [year=-35, month=1, day=1], GalacticDate [year=-35, month=1, day=2]]",
-				now.select().first(2).subscribe().asStream().collect(Collectors.toList()).toString());
+				now.subscribe().asStream().collect(Collectors.toList()).toString());
 	}
+	
+	@Test
+	public void nowResTest() {
+		given()
+        .when().get("/galacticstandardcalendar/now/2018-11-30T18:35:24.00Z/5")
+        .then()
+           .statusCode(200)
+           .body(is("hello"));
+	}
+
 }

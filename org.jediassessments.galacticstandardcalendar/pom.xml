@@ -18,14 +18,11 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
 		</dependency>
-
-		<!-- <dependency> <groupId>io.quarkus</groupId> <artifactId>quarkus-resteasy-reactive</artifactId> 
-			<version>1.12.2.Final</version> </dependency> <dependency> <groupId>io.quarkus</groupId> 
-			<artifactId>quarkus-resteasy-reactive-jackson</artifactId> </dependency> -->
 
 		<dependency>
 			<groupId>com.datastax.oss.quarkus</groupId>
@@ -37,6 +34,7 @@
 			<artifactId>quarkus-junit5</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
@@ -59,12 +57,26 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<source>15</source>
+					<target>15</target>
+					<compilerArgs>
+						<arg>--enable-preview</arg>
+					</compilerArgs>
+					<jvmArgs>--enable-preview</jvmArgs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<release>15</release>
+					<compilerArgs>--enable-preview</compilerArgs>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-	<properties>
-		<maven.compiler.source>16</maven.compiler.source>
-		<maven.compiler.target>16</maven.compiler.target>
-	</properties>
-
+	<!-- <properties> <maven.compiler.source>15</maven.compiler.source> <maven.compiler.target>15</maven.compiler.target> 
+		</properties> -->
 </project>
