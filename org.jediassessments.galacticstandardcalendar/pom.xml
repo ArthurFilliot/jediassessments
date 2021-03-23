@@ -50,6 +50,22 @@
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -87,6 +103,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<!-- <properties> <maven.compiler.source>15</maven.compiler.source> <maven.compiler.target>15</maven.compiler.target> 
-		</properties> -->
 </project>
