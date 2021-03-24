@@ -90,35 +90,39 @@ public class GalacticDate implements Temporal {
         }
         long dom = day + daysToAdd;
         if (dom > 0) {
-            if (dom <= 28) {
-                return new GalacticDate(year, month, (int) dom);
-            } else if (dom <= 59) { // 59th Jan is 28th Feb, 59th Feb is 31st Mar
-                long monthLen = lengthOfMonth();
-                if (dom <= monthLen) {
-                    return new GalacticDate(year, month, (int) dom);
-                } else if (month < 12) {
-                    return new GalacticDate(year, month + 1, (int) (dom - monthLen));
-                } else {
-                    YEAR.checkValidValue(year + 1);
-                    return new GalacticDate(year + 1, 1, (int) (dom - monthLen));
-                }
-            }
+        	if (dom < lengthOfYearInDays()) {
+        		return plusDays(this.year, dom);
+        	}else {
+        		int y = (int)(this.year + (dom / lengthOfYearInDays()));
+                dom = dom % lengthOfYearInDays();
+        		return plusDays(y, dom);
+        	}           
         }
         return null;
     }
 	
+	private GalacticDate plusDays(int y, long dom) {
+		long monthLen = lengthOfMonth();
+    	long yearLen = lengthOfYearInDays();
+    	if (dom<yearLen) {
+    		if (dom <= monthLen) {
+                return new GalacticDate(y, month, (int) dom);
+            } 
+            long nbDays = ((month-1)*monthLen + dom);
+            if (nbDays < yearLen) {
+                int moy = this.month + ((int) (nbDays / monthLen));
+                return new GalacticDate(y, moy, (int)(nbDays % monthLen));
+            }
+    	}
+        return null;
+	}
+	
+	public int lengthOfYearInDays() {
+		return 5*7*10;
+	}
+	
 	public int lengthOfMonth() {
-        switch (month) {
-            case 2:
-                return /*(isLeapYear() ? */29 /*: 28)*/;
-            case 4:
-            case 6:
-            case 9:
-            case 11:
-                return 30;
-            default:
-                return 31;
-        }
+		return 5*7;
     }
 
 	@Override
@@ -148,6 +152,34 @@ public class GalacticDate implements Temporal {
 
 	public void setDay(int day) {
 		this.day = day;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + day;
+		result = prime * result + month;
+		result = prime * result + year;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GalacticDate other = (GalacticDate) obj;
+		if (day != other.day)
+			return false;
+		if (month != other.month)
+			return false;
+		if (year != other.year)
+			return false;
+		return true;
 	}
 	
 }

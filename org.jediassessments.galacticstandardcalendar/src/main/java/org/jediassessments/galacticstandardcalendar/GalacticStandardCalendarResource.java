@@ -37,9 +37,9 @@ public class GalacticStandardCalendarResource implements Resource<GalacticStanda
 	@GET
 	@Produces(MediaType.SERVER_SENT_EVENTS)
 	@RestSseElementType(MediaType.APPLICATION_JSON)
-	@Path("/now/{battleofnaboo}/{count}")
-	public Multi<GalacticDate> now(Instant battleofnaboo, int count) { // 2018-11-30T18:35:24.00Z
-		return service.now(Instant.now(), count);
+	@Path("/now/{battleofnaboo}/{speed}/{count}")
+	public Multi<GalacticDate> now(Instant battleofnaboo, Speed speed, int count) { // 2018-11-30T18:35:24.00Z
+		return service.now(Instant.now(), Instant.now(), speed, count);
 	}
 
 }

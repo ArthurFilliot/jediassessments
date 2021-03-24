@@ -47,8 +47,9 @@ public class GalacticStandardCalendarServiceRunningTest {
 	public void nowResTest() {
 		String result = 
 			given()
-        		.when().get("/galacticstandardcalendar/now/"+Instant.now()+"/2")
+        		.when().get("/galacticstandardcalendar/now/"+Instant.now()+"/ONEDAY_PER_SEC/2")
         		.then().statusCode(200).extract().asString();
+		System.out.println(result);
 		assertEquals("{\"day\":2,\"month\":1,\"year\":-35}", lastData(result));
 	}
 	
@@ -90,7 +91,8 @@ public class GalacticStandardCalendarServiceRunningTest {
         		.body(GalacticCalendarSavePoint.of(Instant.now(), new GalacticDate(-35, 1, 1)))
         		.get("/galacticstandardcalendar/now/"+Instant.now()+"/2")
         		.then().statusCode(200).extract().asString();
-		assertEquals("{\"day\":2,\"month\":1,\"year\":-35}", lastData(result));
+		assertEquals("""
+				{"day":2,"month":1,"year":-35}""", lastData(result));
 	}
 	
 	private String lastData(String result) {
