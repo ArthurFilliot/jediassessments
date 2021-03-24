@@ -22,7 +22,7 @@ public class GalacticStandardCalendarService implements Service {
 	public Multi<GalacticDate> now(Instant savepoint, Instant start, Speed speed, int count) {
 		GalacticDate battleofnaboo = new GalacticDate(-35,1,1);
 		long numSecondsAfterStart = savepoint.getEpochSecond() - start.getEpochSecond();
-		BiFunction<GalacticDate, Long, GalacticDate> tickFunPerMinute = new BiFunction<GalacticDate, Long, GalacticDate>() {
+		var tickFunPerMinute = new BiFunction<GalacticDate, Long, GalacticDate>() {
 			@Override
 			public GalacticDate apply(GalacticDate t, Long u) {
 				long nbDays = u*6 + ((u/60)*8);// One galactic year = 368 days
