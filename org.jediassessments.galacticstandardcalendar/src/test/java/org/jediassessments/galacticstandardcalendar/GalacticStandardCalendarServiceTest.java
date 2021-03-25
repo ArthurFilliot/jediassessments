@@ -21,29 +21,36 @@ public class GalacticStandardCalendarServiceTest {
 
 //	@Inject
 	GalacticStandardCalendarService service = new GalacticStandardCalendarService();
-
+	
 	@Test
 	public void nowFunDaysTest() {
-		Instant now1 = Instant.now();
-		Multi<GalacticDate> now = service.now(now1, now1, Speed.ONEDAY_PER_SEC, 2);
+		Multi<GalacticDate> now = service.now(Instant.now(), GalacticDate.BATTLEOFNABOO, Speed.ONEDAY_PER_SEC, 5);
 		assertNotNull(now);
-		assertEquals("[GalacticDate [year=-35, month=1, day=1], GalacticDate [year=-35, month=1, day=2]]",
-				now.subscribe().asStream().collect(Collectors.toList()).toString());
+		assertEquals(List.of(
+				new GalacticDate(-35, 1, 1),
+				new GalacticDate(-35, 1, 2),
+				new GalacticDate(-35, 1, 3),
+				new GalacticDate(-35, 1, 4),
+				new GalacticDate(-35, 1, 5)),
+				now.subscribe().asStream().collect(Collectors.toList()));
 	}
 	
 	@Test
 	public void nowFunWeeksTest() {
-		Instant now1 = Instant.now();
-		Multi<GalacticDate> now = service.now(now1, now1, Speed.ONEWEEK_PER_SEC, 2);
+		Multi<GalacticDate> now = service.now(Instant.now(), GalacticDate.BATTLEOFNABOO, Speed.ONEWEEK_PER_SEC, 5);
 		assertNotNull(now);
-		assertEquals("[GalacticDate [year=-35, month=1, day=1], GalacticDate [year=-35, month=1, day=8]]",
-				now.subscribe().asStream().collect(Collectors.toList()).toString());
+		assertEquals(List.of(
+				new GalacticDate(-35, 1, 1),
+				new GalacticDate(-35, 1, 8),
+				new GalacticDate(-35, 1, 15),
+				new GalacticDate(-35, 1, 22),
+				new GalacticDate(-35, 1, 29)),
+				now.subscribe().asStream().collect(Collectors.toList()));
 	}
 	
 	@Test
 	public void nowFunYearsTest() {
-		Instant now1 = Instant.now();
-		Multi<GalacticDate> now = service.now(now1, now1, Speed.ONEYEAR_PER_MINUTE, 65);
+		Multi<GalacticDate> now = service.now(Instant.now(), GalacticDate.BATTLEOFNABOO, Speed.TWOYEARS_PER_MINUTE, 5);
 		assertNotNull(now);
 		assertEquals(List.of(
 				new GalacticDate(-35, 1, 1),
@@ -51,6 +58,19 @@ public class GalacticStandardCalendarServiceTest {
 				new GalacticDate(-35, 1, 13),
 				new GalacticDate(-35, 1, 19),
 				new GalacticDate(-35, 1, 25)),
+				now.subscribe().asStream().collect(Collectors.toList()));
+	}
+	
+	@Test
+	public void nowFunPauseTest() {
+		Multi<GalacticDate> now = service.now(Instant.now(), GalacticDate.BATTLEOFNABOO, Speed.PAUSE, 5);
+		assertNotNull(now);
+		assertEquals(List.of(
+				new GalacticDate(-35, 1, 1),
+				new GalacticDate(-35, 1, 1),
+				new GalacticDate(-35, 1, 1),
+				new GalacticDate(-35, 1, 1),
+				new GalacticDate(-35, 1, 1)),
 				now.subscribe().asStream().collect(Collectors.toList()));
 	}
 	

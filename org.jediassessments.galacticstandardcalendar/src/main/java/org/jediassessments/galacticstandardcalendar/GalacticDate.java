@@ -1,7 +1,5 @@
 package org.jediassessments.galacticstandardcalendar;
 
-import static java.time.temporal.ChronoField.YEAR;
-
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalField;
