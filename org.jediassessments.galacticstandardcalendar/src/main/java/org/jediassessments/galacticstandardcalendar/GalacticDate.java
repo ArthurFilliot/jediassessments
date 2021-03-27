@@ -12,7 +12,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 public class GalacticDate implements Temporal {
 	public static GalacticDate BATTLEOFNABOO = new GalacticDate(-35,1,1);
 	private int year;
-	private int month;
+	private int period;
 	private int day;
 	
 	public GalacticDate() {
@@ -22,7 +22,7 @@ public class GalacticDate implements Temporal {
 	public GalacticDate(int year, int month, int day) {
 		super();
 		this.year = year;
-		this.month = month;
+		this.period = month;
 		this.day = day;
 	}
 
@@ -39,18 +39,24 @@ public class GalacticDate implements Temporal {
 	}
 
 	@Override
+	public Temporal with(TemporalField field, long newValue) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public long until(Temporal endExclusive, TemporalUnit unit) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
 	public boolean isSupported(TemporalUnit unit) {
 		if (ChronoUnit.DAYS.equals(unit)
 				|| ChronoUnit.WEEKS.equals(unit)) {
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public Temporal with(TemporalField field, long newValue) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -72,84 +78,64 @@ public class GalacticDate implements Temporal {
         return unit.addTo(this, amountToAdd);
 	}
 	
-	@Override
-	public long until(Temporal endExclusive, TemporalUnit unit) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
 	public GalacticDate plusWeeks(long weeksToAdd) {
-        return plusDays(Math.multiplyExact(weeksToAdd, 7));
+        return plusDays(Math.multiplyExact(weeksToAdd, lengthOfWeek()));
     }
 	
 	public GalacticDate plusDays(long daysToAdd) {
         if (daysToAdd == 0) {
             return this;
         }
-        long dom = day + daysToAdd;
+        long dom = getPeriod().getDayInYear() + (this.day-1) + daysToAdd;
         if (dom > 0) {
-        	if (dom < lengthOfYearInDays()) {
-        		return plusDays(this.year, dom);
-        	}else {
-        		int y = (int)(this.year + (dom / lengthOfYearInDays()));
-                dom = dom % lengthOfYearInDays();
-        		return plusDays(y, dom);
+        	if (dom < GalacticDatePeriod.getLenghtOfYear()) {
+        		return plusDays(this.year, this.period, dom);
+        	} else {
+        		int y = (int)(this.year + (dom / GalacticDatePeriod.getLenghtOfYear()));
+                dom = (dom % GalacticDatePeriod.getLenghtOfYear())+1;
+        		return plusDays(y, 1, dom);
         	}           
         }
         return null;
     }
 	
-	private GalacticDate plusDays(int y, long dom) {
-		long monthLen = lengthOfMonth();
-    	long yearLen = lengthOfYearInDays();
-    	if (dom<yearLen) {
-    		if (dom <= monthLen) {
-                return new GalacticDate(y, month, (int) dom);
-            } 
-            long nbDays = ((month-1)*monthLen + dom);
-            if (nbDays < yearLen) {
-                int moy = this.month + ((int) (nbDays / monthLen));
-                return new GalacticDate(y, moy, (int)(nbDays % monthLen));
-            }
-    	}
-        return null;
+	private GalacticDate plusDays(int mYear, int mPeriod, long dom) {
+		long periodLen = getPeriod(mPeriod).getNbDays();
+		int periodDayInYear = getPeriod(mPeriod).getDayInYear();
+		if (dom < periodDayInYear + periodLen) {
+            return new GalacticDate(mYear, mPeriod, (int)(dom - periodDayInYear)+1);
+        }
+		mPeriod++;
+        return plusDays(mYear,mPeriod,(int)(dom));
 	}
 	
-	public int lengthOfYearInDays() {
-		return 5*7*10;
-	}
-	
-	public int lengthOfMonth() {
-		return 5*7;
+	public int lengthOfPeriod() {
+		return lengthOfWeek()*7;
     }
+	
+	public int lengthOfWeek() {
+		return 5;
+	}
 
 	@Override
 	public String toString() {
-		return "GalacticDate [year=" + year + ", month=" + month + ", day=" + day + "]";
+		return "GalacticDate [year=" + year + ", period=" + period + ", day=" + day + "]";
 	}
 
 	public int getYear() {
 		return year;
 	}
 
-	public void setYear(int year) {
-		this.year = year;
+	public GalacticDateDay getDay() {
+		return GalacticDateDay.values()[day-1];
 	}
-
-	public int getMonth() {
-		return month;
+	
+	private GalacticDatePeriod getPeriod(int mPeriod) {
+		return GalacticDatePeriod.values()[mPeriod-1];
 	}
-
-	public void setMonth(int month) {
-		this.month = month;
-	}
-
-	public int getDay() {
-		return day;
-	}
-
-	public void setDay(int day) {
-		this.day = day;
+	
+	public GalacticDatePeriod getPeriod() {
+		return getPeriod(this.period);
 	}
 
 	@Override
@@ -157,7 +143,7 @@ public class GalacticDate implements Temporal {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + day;
-		result = prime * result + month;
+		result = prime * result + period;
 		result = prime * result + year;
 		return result;
 	}
@@ -173,7 +159,7 @@ public class GalacticDate implements Temporal {
 		GalacticDate other = (GalacticDate) obj;
 		if (day != other.day)
 			return false;
-		if (month != other.month)
+		if (period != other.period)
 			return false;
 		if (year != other.year)
 			return false;

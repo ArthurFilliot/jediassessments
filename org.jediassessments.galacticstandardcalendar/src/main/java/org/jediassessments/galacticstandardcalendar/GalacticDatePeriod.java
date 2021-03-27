@@ -14,6 +14,10 @@ public enum GalacticDatePeriod {
 		this.nbDays = nbDays;
 	}
 	
+	public Integer getNbDays() {
+		return nbDays;
+	}
+
 	public Integer getDayInYear() {
 		var dayInYearAcc = new BiFunction<Integer,Integer,Integer>() {
 			@Override
@@ -26,6 +30,11 @@ public enum GalacticDatePeriod {
 			}
 		};
 		return dayInYearAcc.apply(1, this.ordinal()-1);
+	}
+	
+	public static Integer getLenghtOfYear() {
+		GalacticDatePeriod lastPeriod = GalacticDatePeriod.values()[GalacticDatePeriod.values().length-1];
+		return lastPeriod.getDayInYear() + lastPeriod.getNbDays();
 	}
 	
 }

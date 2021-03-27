@@ -20,5 +20,12 @@ public class GalacticDatePeriodTest {
 				() -> assertEquals(1+(5*7)+(5*7),dayOfTapani),
 				() -> assertEquals(1+(5*7)+(5*7)+1,dayOfSelona));
 	}
+	
+	@Test
+	public void getTotalNbDaysInYear() {
+		Integer lengthOfYear = GalacticDatePeriod.getLenghtOfYear();
+		
+		assertEquals(369, lengthOfYear);
+	}
 
 }
