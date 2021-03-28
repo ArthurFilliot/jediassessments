@@ -138,6 +138,18 @@ public class GalacticDate implements Temporal {
 		return getPeriod(this.period);
 	}
 
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public void setPeriod(int period) {
+		this.period = period;
+	}
+
+	public void setDay(int day) {
+		this.day = day;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -41,10 +41,10 @@ public class GalacticStandardCalendarServiceTest {
 		assertNotNull(now);
 		assertEquals(List.of(
 				new GalacticDate(-35, 1, 1),
-				new GalacticDate(-35, 1, 8),
-				new GalacticDate(-35, 1, 15),
-				new GalacticDate(-35, 1, 22),
-				new GalacticDate(-35, 1, 29)),
+				new GalacticDate(-35, 1, 6),
+				new GalacticDate(-35, 1, 11),
+				new GalacticDate(-35, 1, 16),
+				new GalacticDate(-35, 1, 21)),
 				now.subscribe().asStream().collect(Collectors.toList()));
 	}
 	
@@ -54,10 +54,10 @@ public class GalacticStandardCalendarServiceTest {
 		assertNotNull(now);
 		assertEquals(List.of(
 				new GalacticDate(-35, 1, 1),
-				new GalacticDate(-35, 1, 7),
 				new GalacticDate(-35, 1, 13),
-				new GalacticDate(-35, 1, 19),
-				new GalacticDate(-35, 1, 25)),
+				new GalacticDate(-35, 1, 25),
+				new GalacticDate(-35, 2, 2),
+				new GalacticDate(-35, 2, 14)),
 				now.subscribe().asStream().collect(Collectors.toList()));
 	}
 	
@@ -72,15 +72,6 @@ public class GalacticStandardCalendarServiceTest {
 				new GalacticDate(-35, 1, 1),
 				new GalacticDate(-35, 1, 1)),
 				now.subscribe().asStream().collect(Collectors.toList()));
-	}
-	
-	@Test
-	public void nowResTest() {
-		given()
-        .when().get("/galacticstandardcalendar/now/2018-11-30T18:35:24.00Z/5")
-        .then()
-           .statusCode(200)
-           .body(is("hello"));
 	}
 
 }
