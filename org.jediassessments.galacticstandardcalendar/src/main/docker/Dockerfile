@@ -1,8 +1,11 @@
 # Stage 1 : build with maven image
 FROM maven:3.6.3-openjdk-15 AS build
 COPY pom.xml /usr/src/app/
-RUN mvn -f /usr/src/app/pom.xml -B de.qaware.maven:go-offline-maven-plugin:1.2.5:resolve-dependencies
+COPY pom.xml /usr/bootstrap/
+COPY src/main/docker/BootstrapTest.java /usr/bootstrap/src/test/java/
 COPY src /usr/src/app/src
+RUN mvn -f /usr/bootstrap/pom.xml clean package && rm -r /usr/bootstrap/target
+ARG CHECKPOINT=reset
 RUN mvn -f /usr/src/app/pom.xml clean package
 
 # Stage 2 : create the docker final image
