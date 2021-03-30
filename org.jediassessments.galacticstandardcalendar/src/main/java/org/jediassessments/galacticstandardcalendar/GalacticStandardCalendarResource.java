@@ -28,7 +28,7 @@ public class GalacticStandardCalendarResource implements Resource<GalacticStanda
 	@RestSseElementType(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
 	@Path("/now/{count}")
-	public Multi<GalacticCalendarSavePoint> now(int count, GalacticCalendarSavePoint savepoint) { 
+	public Multi<GalacticCalendarSavePoint> now(GalacticCalendarSavePoint savepoint, int count) { 
 		return Multi.createFrom().item(savepoint);
 	}
 

@@ -18,7 +18,7 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
-
+		<!-- Utilities -->
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
@@ -65,6 +65,12 @@
 					<artifactId>commons-logging</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<!-- Swagger -->
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-smallrye-openapi</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
