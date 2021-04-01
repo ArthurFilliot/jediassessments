@@ -9,7 +9,7 @@ import java.time.temporal.UnsupportedTemporalTypeException;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @RegisterForReflection
-public class GalacticDate implements Temporal {
+public class GalacticDate implements Temporal, Comparable<GalacticDate> {
 	public static GalacticDate BATTLEOFNABOO = new GalacticDate(-35,1,1);
 	private int year;
 	private int period;
@@ -176,6 +176,15 @@ public class GalacticDate implements Temporal {
 		if (year != other.year)
 			return false;
 		return true;
+	}
+	
+	private Integer getDaysFromBattleOfNaboo() {
+		return (GalacticDatePeriod.getLenghtOfYear()*this.year) + (this.getPeriod().getDayInYear()-1) + this.day;
+	}
+
+	@Override
+	public int compareTo(GalacticDate o) {
+		return getDaysFromBattleOfNaboo().compareTo(o.getDaysFromBattleOfNaboo());
 	}
 	
 }
