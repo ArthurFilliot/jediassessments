@@ -1,7 +1,9 @@
-import React,{Component, useState, useEffect} from 'react';
-import VerticalLinearStepper from './Stepper'; // Import a component from another file
+import React,{createRef, Component, useState, useEffect} from 'react';
+import VerticalLinearStepper from './Stepper';
 
 export default class App extends Component {
+
+  childRef = createRef();
 
   constructor(props) {
     super(props)

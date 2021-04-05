@@ -1,34 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react'
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import StepConnector from '@material-ui/core/StepConnector';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-  },
-  button: {
-    marginTop: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
-  actionsContainer: {
-    marginBottom: theme.spacing(2),
-  },
-  resetContainer: {
-    padding: theme.spacing(3),
-  },
-}));
+import { makeStyles } from '@material-ui/core/styles';
 
 function getSteps() {
-  return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
+  return ['Select campaign settings', 'Create an ad group', 'Create an ad','','','','','','','','',''];
 }
 
 function getStepContent(step) {
@@ -45,11 +25,17 @@ function getStepContent(step) {
               If you run into any problems with your ads, find out how to tell if
               they're running and how to resolve approval issues.`;
     default:
-      return 'Unknown step';
+      return `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
   }
 }
 
-const useGalacticDateStepIndentStyles = makeStyles({
+const GalacticDateIndent=(props)=> {
+  const { active, completed, icon} = props;
+  let useStyles;
+  const classes = (useStyles = makeStyles({
     root: {
       color: '#eaeaf0',
       display: 'flex',
@@ -65,33 +51,58 @@ const useGalacticDateStepIndentStyles = makeStyles({
     passed: {
       color: '#784af4',
     },
-  });
-
-function GalacticDateIndent(props) {
-    const classes = useGalacticDateStepIndentStyles();
-    const { active, completed, icon} = props;
+  }))();
   
-    return (
-        <div
-        className={clsx(classes.root, {
-          [classes.active]: active,
-          [classes.completed]: completed,
-        })}
-      >
-        {icon}
-      </div>
-    );
-  }
+  return (
+    <div className={clsx(classes.root, {[classes.active]: active, [classes.passed]: completed, })}>
+      {icon}111111
+    </div>
+  );
+}
 
-GalacticDateIndent.propTypes = {
-    active: PropTypes.bool,
-    completed: PropTypes.bool,
-    icon: PropTypes.node,
-};
+const VerticalLinearStepper = () => {
+  const [currentDate, setCurrentDate] = useState(null);
+  const [activeStep, setActiveStep] = useState(0);
+  const [listening, setListening] = useState(false);
 
-export default function VerticalLinearStepper() {
-  const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  let useStyles;
+  const classes = (useStyles = makeStyles((theme) => ({
+    root: {
+      width: '100%',
+    },
+    button: {
+      marginTop: theme.spacing(1),
+      marginRight: theme.spacing(1),
+    },
+    actionsContainer: {
+      marginBottom: theme.spacing(2),
+    },
+    resetContainer: {
+      padding: theme.spacing(3),
+    },
+  })))();
+  let eventSource;
+  useEffect(() => {
+      if (!listening) {
+          eventSource = new EventSource("/galacticstandardcalendar/now/11");
+          eventSource.onmessage = (event) => {
+              const galacticdate = JSON.parse(event.data);
+              console.log("galacticdate : " + galacticdate);
+              handleNext();
+          }
+          eventSource.onerror = (err) => {
+              console.error("EventSource failed:", err);
+              eventSource.close();
+          }
+          setListening(true)
+      }
+      return () => {
+              eventSource.close();
+              console.log("event closed")
+      }
+
+  }, [currentDate]);
+  
   const steps = getSteps();
 
   const handleNext = () => {
@@ -110,41 +121,16 @@ export default function VerticalLinearStepper() {
     <div className={classes.root}>
       <Stepper activeStep={activeStep} orientation="vertical" >
         {steps.map((label, index) => (
-          <Step key={label}>
+          <Step key={index}>
             <StepLabel StepIconComponent={GalacticDateIndent}>{label}</StepLabel>
             <StepContent>
               <Typography>{getStepContent(index)}</Typography>
-              <div className={classes.actionsContainer}>
-                <div>
-                  <Button
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    className={classes.button}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                  </Button>
-                </div>
-              </div>
             </StepContent>
           </Step>
         ))}
       </Stepper>
-      {activeStep === steps.length && (
-        <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} className={classes.button}>
-            Reset
-          </Button>
-        </Paper>
-      )}
     </div>
   );
-}
+};
+
+export default  VerticalLinearStepper;
