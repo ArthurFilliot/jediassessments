@@ -2,7 +2,7 @@ package org.jediassessments.galacticstandardcalendar;
 
 import static io.restassured.RestAssured.given;
 import static org.awaitility.Awaitility.await;
-import static org.jediassessments.galacticstandardcalendar.GalacticDateDay.Atunda;
+import static org.jediassessments.galacticstandardcalendar.date.GalacticDateDay.Atunda;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,6 +20,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.sse.SseEventSource;
 
+import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

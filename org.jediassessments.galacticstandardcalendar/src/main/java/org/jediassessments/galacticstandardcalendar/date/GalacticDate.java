@@ -1,4 +1,4 @@
-package org.jediassessments.galacticstandardcalendar;
+package org.jediassessments.galacticstandardcalendar.date;
 
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;

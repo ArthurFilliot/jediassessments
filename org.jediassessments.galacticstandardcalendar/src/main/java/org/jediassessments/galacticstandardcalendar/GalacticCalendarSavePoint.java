@@ -2,6 +2,8 @@ package org.jediassessments.galacticstandardcalendar;
 
 import java.time.Instant;
 
+import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
+
 @SuppressWarnings("preview")
 public record GalacticCalendarSavePoint(Instant userInstant, GalacticDate galacticCalendarDate, Speed speed) {
 	public GalacticCalendarSavePoint() {

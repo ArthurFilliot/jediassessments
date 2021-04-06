@@ -1,7 +1,8 @@
-package org.jediassessments.galacticstandardcalendar;
+package org.jediassessments.galacticstandardcalendar.date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.jediassessments.galacticstandardcalendar.date.GalacticDatePeriod;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

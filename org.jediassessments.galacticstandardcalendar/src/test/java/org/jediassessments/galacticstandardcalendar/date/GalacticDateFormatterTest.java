@@ -1,4 +1,4 @@
-package org.jediassessments.galacticstandardcalendar;
+package org.jediassessments.galacticstandardcalendar.date;
 
 import org.junit.jupiter.api.Test;
 

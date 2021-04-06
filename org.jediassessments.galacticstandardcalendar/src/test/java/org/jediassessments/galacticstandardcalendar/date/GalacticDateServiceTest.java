@@ -1,26 +1,20 @@
-package org.jediassessments.galacticstandardcalendar;
+package org.jediassessments.galacticstandardcalendar.date;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
+import org.jediassessments.galacticstandardcalendar.Speed;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Multi;
 
-//@QuarkusTest
-public class GalacticStandardCalendarServiceTest {
+public class GalacticDateServiceTest {
 
-//	@Inject
-	GalacticStandardCalendarService service = new GalacticStandardCalendarService();
+	private GalacticDateService service = new GalacticDateService();
 	
 	@Test
 	public void nowFunDaysTest() {
