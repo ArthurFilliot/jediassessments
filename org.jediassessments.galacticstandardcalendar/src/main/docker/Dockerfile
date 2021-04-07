@@ -6,7 +6,7 @@ COPY src/main/docker/BootstrapTest.java /usr/bootstrap/src/test/java/
 COPY src /usr/src/app/src
 RUN mvn -f /usr/bootstrap/pom.xml clean package && rm -r /usr/bootstrap/target
 ARG CHECKPOINT=reset
-RUN mvn -f /usr/src/app/pom.xml clean package
+RUN MAVEN_OPTS="--enable-preview" mvn -f /usr/src/app/pom.xml clean package
 
 # Stage 2 : create the docker final image
 FROM adoptopenjdk/openjdk15:jre-15.0.2_7-alpine 

@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 
 function getSteps() {
-  return ['Select campaign settings', 'Create an ad group', 'Create an ad','','','','','','','','',''];
+  return ['Select campaign settings', 'Create an ad group', 'Create an ad','','','','','','','',''];
 }
 
 function getStepContent(step) {
@@ -32,8 +32,22 @@ function getStepContent(step) {
   }
 }
 
+let dates = {
+  1: 'aaaaa',
+  2: 'bbbbb',
+  3: '',
+  4: '',
+  5: '',
+  6: '',
+  7: '',
+  8: '',
+  9: '',
+  10: '',
+  11: '',
+};
+
 const GalacticDateIndent=(props)=> {
-  const { active, completed, icon} = props;
+  const {active, completed, icon} = props;
   let useStyles;
   const classes = (useStyles = makeStyles({
     root: {
@@ -55,13 +69,13 @@ const GalacticDateIndent=(props)=> {
   
   return (
     <div className={clsx(classes.root, {[classes.active]: active, [classes.passed]: completed, })}>
-      {icon}111111
+      {icon} : {dates[icon]}
     </div>
   );
 }
 
 const VerticalLinearStepper = () => {
-  const [currentDate, setCurrentDate] = useState(null);
+  const [currentWindow, setCurrentWindow] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
   const [listening, setListening] = useState(false);
 
@@ -86,9 +100,18 @@ const VerticalLinearStepper = () => {
       if (!listening) {
           eventSource = new EventSource("/galacticstandardcalendar/now/11");
           eventSource.onmessage = (event) => {
-              const galacticdate = JSON.parse(event.data);
-              console.log("galacticdate : " + galacticdate);
-              handleNext();
+              let edates = JSON.parse(event.data).dates;
+              // setCurrentWindow(edates);
+              let i = 0;
+              let activeIndex=0;
+              edates.forEach(entry => {
+                dates[i+1] = JSON.stringify(entry.key);
+                if (entry.value==='Active') {
+                  activeIndex=i;
+                }
+                i++;
+              });
+              setActiveStep(activeIndex);
           }
           eventSource.onerror = (err) => {
               console.error("EventSource failed:", err);
@@ -101,21 +124,9 @@ const VerticalLinearStepper = () => {
               console.log("event closed")
       }
 
-  }, [currentDate]);
+  }, [currentWindow]);
   
   const steps = getSteps();
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
 
   return (
     <div className={classes.root}>

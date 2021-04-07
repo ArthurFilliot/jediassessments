@@ -1,15 +1,14 @@
 package org.jediassessments.galacticstandardcalendar;
 
-import java.time.Duration;
 import java.time.Instant;
-import java.util.function.BiFunction;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
-import org.jediassessments.galacticstandardcalendar.date.GalacticDateService;
+import org.jediassessments.galacticstandardcalendar.window.GalacticWindow;
+import org.jediassessments.galacticstandardcalendar.window.GalacticWindowService;
 
 import io.smallrye.mutiny.Multi;
 
@@ -20,19 +19,19 @@ public class GalacticStandardCalendarService implements Service {
 	
 	// Business Delegate
 	@Inject
-	private GalacticDateService dateService;
+	private GalacticWindowService windowService;
 	
-	public Multi<GalacticDate> now(int count) {
-		return dateService.now(count);
+	public Multi<GalacticWindow> now(int count) {
+		return windowService.now(count);
 	}
 	
-	public Multi<GalacticDate> now(Instant instant, GalacticDate savepoint, Speed speed, int count) {
-		return dateService.now(instant, savepoint, speed, count);
+	public Multi<GalacticWindow> now(Instant instant, GalacticDate savepoint, Speed speed, int count) {
+		return windowService.now(instant, savepoint, speed, count);
 	}
 	
 	@SuppressWarnings("preview")
-	public Multi<GalacticDate> now(GalacticCalendarSavePoint savepoint, int count) {
-		return dateService.now(savepoint, count);
+	public Multi<GalacticWindow> now(GalacticCalendarSavePoint savepoint, int count) {
+		return windowService.now(savepoint, count);
 	}
 
 }

@@ -32,7 +32,7 @@ public class GalacticWindowService implements Service {
 	}
 
 	public Multi<GalacticWindow> now(int count) {
-		return now(GalacticCalendarSavePoint.of(Instant.now(),GalacticDate.BATTLEOFNABOO,Speed.PAUSE), count);
+		return now(GalacticCalendarSavePoint.of(Instant.now(),GalacticDate.BATTLEOFNABOO,Speed.ONEDAY_PER_SEC), count);
 	}
 	
 	public Multi<GalacticWindow> now(Instant instant, GalacticDate savepoint, Speed speed, int count) {

@@ -3,9 +3,9 @@ package org.jediassessments.galacticstandardcalendar.window;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
-import com.datastax.oss.driver.shaded.guava.common.base.Functions;
 
 public class GalacticWindow {
 	
@@ -24,7 +24,7 @@ public class GalacticWindow {
 	public GalacticWindow(Set<GalacticDate> mDates, GalacticDate activeDate) {
 		dates.putAll(
 			mDates.stream().collect(Collectors.toMap(
-					Functions.identity(),
+					Function.identity(),
 					dt->GalacticDateInWindowStatus.None)));
 		if (activeDate!=null) {
 			for (Map.Entry<GalacticDate, GalacticDateInWindowStatus> entry : dates.entrySet()) {

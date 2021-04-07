@@ -9,7 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jboss.resteasy.reactive.RestSseElementType;
-import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
+import org.jediassessments.galacticstandardcalendar.window.GalacticWindow;
 
 import io.smallrye.mutiny.Multi;
 
@@ -37,7 +37,7 @@ public class GalacticStandardCalendarResource implements Resource<GalacticStanda
 	@Produces(MediaType.SERVER_SENT_EVENTS)
 	@RestSseElementType(MediaType.APPLICATION_JSON)
 	@Path("/now/{count}")
-	public Multi<GalacticDate> now(int count) {
+	public Multi<GalacticWindow> now(int count) {
 		return service.now(count);
 	}
 

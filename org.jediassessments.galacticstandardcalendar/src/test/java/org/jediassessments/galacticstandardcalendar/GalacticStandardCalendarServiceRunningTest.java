@@ -46,30 +46,30 @@ public class GalacticStandardCalendarServiceRunningTest {
 	                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)));
 	}
 	
-	@Test
-	public void nowEventsTest() {
-		List<GalacticDate> result = listenFor(
-				"http://localhost:" + RestAssured.port + "/galacticstandardcalendar/now/2",
-				"",
-				GalacticDate.class, 5);
-		assertAll("Should return each days in order",
-        	    () -> assertEquals(Atunda, result.get(0).getDay()),
-        	    () -> assertEquals(Atunda, result.get(1).getDay()),
-        	    () -> assertEquals(Atunda, result.get(2).getDay()),
-        	    () -> assertEquals(Atunda, result.get(3).getDay()),
-        	    () -> assertEquals(Atunda, result.get(4).getDay())
-        	);
-	}
-
-	@Test
-	public void nowRessourceTest() {
-		String result = 
-			given()
-        		.when().get("/galacticstandardcalendar/now/2")
-        		.then().statusCode(200).extract().asString();
-		System.out.println(result);
-		assertEquals(GalacticDate.BATTLEOFNABOO, lastData(result, GalacticDate.class));
-	}
+//	@Test
+//	public void nowEventsTest() {
+//		List<GalacticDate> result = listenFor(
+//				"http://localhost:" + RestAssured.port + "/galacticstandardcalendar/now/2",
+//				"",
+//				GalacticDate.class, 5);
+//		assertAll("Should return each days in order",
+//        	    () -> assertEquals(Atunda, result.get(0).getDay()),
+//        	    () -> assertEquals(Atunda, result.get(1).getDay()),
+//        	    () -> assertEquals(Atunda, result.get(2).getDay()),
+//        	    () -> assertEquals(Atunda, result.get(3).getDay()),
+//        	    () -> assertEquals(Atunda, result.get(4).getDay())
+//        	);
+//	}
+//
+//	@Test
+//	public void nowRessourceTest() {
+//		String result = 
+//			given()
+//        		.when().get("/galacticstandardcalendar/now/2")
+//        		.then().statusCode(200).extract().asString();
+//		System.out.println(result);
+//		assertEquals(GalacticDate.BATTLEOFNABOO, lastData(result, GalacticDate.class));
+//	}
 	
 	private <T> T lastData(String result, Class<T> clazz) {
 		JsonbConfig config = (new JsonbConfig()).withStrictIJSON(true);
