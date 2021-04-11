@@ -74,7 +74,7 @@ const GalacticDateIndent=(props)=> {
   );
 }
 
-const VerticalLinearStepper = () => {
+const VerticalLinearStepper = (props) => {
   const [currentWindow, setCurrentWindow] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
   const [listening, setListening] = useState(false);
@@ -95,13 +95,15 @@ const VerticalLinearStepper = () => {
       padding: theme.spacing(3),
     },
   })))();
+  
   let eventSource;
   useEffect(() => {
       if (!listening) {
-          eventSource = new EventSource("/galacticstandardcalendar/now/11");
+          eventSource = new EventSource('/galacticstandardcalendar/now/11');
+          console.log(eventSource);
           eventSource.onmessage = (event) => {
+              console.debug("VerticalLinearStepper Event fired");
               let edates = JSON.parse(event.data).dates;
-              // setCurrentWindow(edates);
               let i = 0;
               let activeIndex=0;
               edates.forEach(entry => {
@@ -111,6 +113,7 @@ const VerticalLinearStepper = () => {
                 }
                 i++;
               });
+              console.debug("VerticalLinearStepper activeIndex : " + activeIndex);
               setActiveStep(activeIndex);
           }
           eventSource.onerror = (err) => {
@@ -144,4 +147,4 @@ const VerticalLinearStepper = () => {
   );
 };
 
-export default  VerticalLinearStepper;
+export default VerticalLinearStepper;
