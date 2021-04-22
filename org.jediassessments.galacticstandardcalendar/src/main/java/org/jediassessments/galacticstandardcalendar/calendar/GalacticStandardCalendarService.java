@@ -1,4 +1,4 @@
-package org.jediassessments.galacticstandardcalendar;
+package org.jediassessments.galacticstandardcalendar.calendar;
 
 import java.time.Instant;
 
@@ -6,6 +6,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
+import org.jediassessments.galacticstandardcalendar.Service;
 import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
 import org.jediassessments.galacticstandardcalendar.window.GalacticWindow;
 import org.jediassessments.galacticstandardcalendar.window.GalacticWindowService;
@@ -21,17 +22,13 @@ public class GalacticStandardCalendarService implements Service {
 	@Inject
 	private GalacticWindowService windowService;
 	
-	public Multi<GalacticWindow> now(int count) {
-		return windowService.now(count);
+	public Multi<GalacticWindow> now(int count, int interval) {
+		GalacticCalendarSavePoint savepoint = new GalacticCalendarSavePoint();
+		return windowService.now(savepoint.userInstant(), savepoint.galacticCalendarDate(), savepoint.speed(), count, interval);
 	}
 	
-	public Multi<GalacticWindow> now(Instant instant, GalacticDate savepoint, Speed speed, int count) {
-		return windowService.now(instant, savepoint, speed, count);
-	}
-	
-	@SuppressWarnings("preview")
-	public Multi<GalacticWindow> now(GalacticCalendarSavePoint savepoint, int count) {
-		return windowService.now(savepoint, count);
+	public Multi<GalacticWindow> now(GalacticCalendarSavePoint savepoint, int count, int interval) {
+		return windowService.now(savepoint.userInstant(), savepoint.galacticCalendarDate(), savepoint.speed(), count, interval);
 	}
 
 }

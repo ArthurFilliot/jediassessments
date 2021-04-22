@@ -1,4 +1,4 @@
-package org.jediassessments.galacticstandardcalendar;
+package org.jediassessments.galacticstandardcalendar.calendar;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -9,6 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jboss.resteasy.reactive.RestSseElementType;
+import org.jediassessments.galacticstandardcalendar.Resource;
 import org.jediassessments.galacticstandardcalendar.window.GalacticWindow;
 
 import io.smallrye.mutiny.Multi;
@@ -24,21 +25,21 @@ public class GalacticStandardCalendarResource implements Resource<GalacticStanda
 		return service;
 	}
 	
+	@GET
+	@Produces(MediaType.SERVER_SENT_EVENTS)
+	@RestSseElementType(MediaType.APPLICATION_JSON)
+	@Path("/now/{count}/{interval}")
+	public Multi<GalacticWindow> now(int count, int interval) { 
+		return service.now(count, interval);
+	}
+	
 	@POST
 	@Produces(MediaType.SERVER_SENT_EVENTS)
 	@RestSseElementType(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-	@Path("/now/{count}")
-	public Multi<GalacticCalendarSavePoint> now(GalacticCalendarSavePoint savepoint, int count) { 
-		return Multi.createFrom().item(savepoint);
-	}
-
-	@GET
-	@Produces(MediaType.SERVER_SENT_EVENTS)
-	@RestSseElementType(MediaType.APPLICATION_JSON)
-	@Path("/now/{count}")
-	public Multi<GalacticWindow> now(int count) {
-		return service.now(count);
+	@Path("/now/{count}/{interval}")
+	public Multi<GalacticWindow> now(GalacticCalendarSavePoint savepoint, int count, int interval) { 
+		return service.now(savepoint, count, interval);
 	}
 
 }

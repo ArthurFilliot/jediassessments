@@ -9,43 +9,19 @@ import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
 
 public class GalacticWindow {
 	
-	private Map<GalacticDate, GalacticDateInWindowStatus> dates = new TreeMap<>();
+	private Map<GalacticDate, Long> dates = new TreeMap<>();
 
 	public GalacticWindow() {}
 	
-	public GalacticWindow(Set<GalacticDate> dates) {
-		this(dates, null);
-	}
-	
-	public GalacticWindow(Map<GalacticDate, GalacticDateInWindowStatus> dates) {
+	public GalacticWindow(Map<GalacticDate, Long> dates) {
 		this.dates = dates;
 	}
 
-	public GalacticWindow(Set<GalacticDate> mDates, GalacticDate activeDate) {
-		dates.putAll(
-			mDates.stream().collect(Collectors.toMap(
-					Function.identity(),
-					dt->GalacticDateInWindowStatus.None)));
-		if (activeDate!=null) {
-			for (Map.Entry<GalacticDate, GalacticDateInWindowStatus> entry : dates.entrySet()) {
-				switch (entry.getKey().compareTo(activeDate)) {
-					case -1 : entry.setValue(GalacticDateInWindowStatus.Completed);break;
-					case 0 : entry.setValue(GalacticDateInWindowStatus.Active);break;
-					case 1 : entry.setValue(GalacticDateInWindowStatus.None);break;
-				}
-			}
-		}
-	}
-	
-	public GalacticWindow switchTo(GalacticDate dt) {
-		return new GalacticWindow(dates.keySet(), dt);
-	}
-
-	public Map<GalacticDate, GalacticDateInWindowStatus> getDates() {
+	public Map<GalacticDate, Long> getDates() {
 		return dates;
 	}
 
-	public void setDates(Map<GalacticDate, GalacticDateInWindowStatus> dates) {
+	public void setDates(Map<GalacticDate, Long> dates) {
 		this.dates = dates;
 	}
 

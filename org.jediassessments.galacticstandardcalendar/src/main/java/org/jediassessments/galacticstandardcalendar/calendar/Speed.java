@@ -1,4 +1,4 @@
-package org.jediassessments.galacticstandardcalendar;
+package org.jediassessments.galacticstandardcalendar.calendar;
 
 import java.util.function.BiFunction;
 

@@ -2,17 +2,20 @@ package org.jediassessments.galacticstandardcalendar.window;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
-import org.jediassessments.galacticstandardcalendar.GalacticCalendarSavePoint;
-import org.jediassessments.galacticstandardcalendar.GalacticStandardCalendarService;
 import org.jediassessments.galacticstandardcalendar.Service;
-import org.jediassessments.galacticstandardcalendar.Speed;
+import org.jediassessments.galacticstandardcalendar.calendar.GalacticCalendarSavePoint;
+import org.jediassessments.galacticstandardcalendar.calendar.GalacticStandardCalendarService;
+import org.jediassessments.galacticstandardcalendar.calendar.Speed;
 import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
 import org.jediassessments.galacticstandardcalendar.date.GalacticDateService;
 
@@ -30,27 +33,14 @@ public class GalacticWindowService implements Service {
 	public void setDateService(GalacticDateService dateService) {
 		this.dateService = dateService;
 	}
-
-	public Multi<GalacticWindow> now(int count) {
-		return now(GalacticCalendarSavePoint.of(Instant.now(),GalacticDate.BATTLEOFNABOO,Speed.ONEDAY_PER_SEC), count);
-	}
 	
-	public Multi<GalacticWindow> now(Instant instant, GalacticDate savepoint, Speed speed, int count) {
-		return now(GalacticCalendarSavePoint.of(instant,savepoint,speed), count);
-	}
-	
-	public Multi<GalacticWindow> now(GalacticCalendarSavePoint savepoint, int count) {
-		Integer tickCount = count;
-		var dates = new TreeSet<>(Set.of(savepoint.galacticCalendarDate()));
-		do {
-			dates.add(savepoint.speed().getTickFun().apply(dates.last(), 1L));
-		}while(--count>1);
-		GalacticWindow window = new GalacticWindow(dates);
-		Multi<GalacticDate> now = dateService.now(savepoint);
+	public Multi<GalacticWindow> now(Instant userInstant, GalacticDate start, Speed speed, Integer count, Integer interval) {
+		GalacticWindowBuilder windowBuilder = new GalacticWindowBuilder(userInstant, speed, interval);
+		Multi<GalacticDate> now = dateService.now(userInstant, start, speed, count, interval);
 		return now
 				.onItem()
-				.transform(dt->window.switchTo(dt))
+				.transform(dt->windowBuilder.buildWindow(dt))
 				.select()
-                .first(tickCount);
+                .first(count);
 	}
 }

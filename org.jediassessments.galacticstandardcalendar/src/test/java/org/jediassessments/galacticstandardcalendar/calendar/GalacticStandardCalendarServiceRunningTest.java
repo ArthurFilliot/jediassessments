@@ -1,11 +1,10 @@
-package org.jediassessments.galacticstandardcalendar;
+package org.jediassessments.galacticstandardcalendar.calendar;
 
-import static io.restassured.RestAssured.given;
 import static org.awaitility.Awaitility.await;
-import static org.jediassessments.galacticstandardcalendar.date.GalacticDateDay.Atunda;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
@@ -21,6 +20,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.sse.SseEventSource;
 
 import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
+import org.jediassessments.galacticstandardcalendar.date.GalacticDateDay;
+import org.jediassessments.galacticstandardcalendar.date.GalacticDateFormatterTest;
+import org.jediassessments.galacticstandardcalendar.window.GalacticWindow;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +34,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.restassured.config.ObjectMapperConfig;
+
+import static org.jediassessments.galacticstandardcalendar.date.GalacticDateDay.*;
+import static org.jediassessments.galacticstandardcalendar.date.GalacticDatePeriod.*;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.*;
 
 @QuarkusTest
 public class GalacticStandardCalendarServiceRunningTest {
@@ -46,30 +54,31 @@ public class GalacticStandardCalendarServiceRunningTest {
 	                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)));
 	}
 	
-//	@Test
-//	public void nowEventsTest() {
-//		List<GalacticDate> result = listenFor(
-//				"http://localhost:" + RestAssured.port + "/galacticstandardcalendar/now/2",
-//				"",
-//				GalacticDate.class, 5);
-//		assertAll("Should return each days in order",
-//        	    () -> assertEquals(Atunda, result.get(0).getDay()),
-//        	    () -> assertEquals(Atunda, result.get(1).getDay()),
-//        	    () -> assertEquals(Atunda, result.get(2).getDay()),
-//        	    () -> assertEquals(Atunda, result.get(3).getDay()),
-//        	    () -> assertEquals(Atunda, result.get(4).getDay())
-//        	);
-//	}
-//
-//	@Test
-//	public void nowRessourceTest() {
-//		String result = 
-//			given()
-//        		.when().get("/galacticstandardcalendar/now/2")
-//        		.then().statusCode(200).extract().asString();
-//		System.out.println(result);
-//		assertEquals(GalacticDate.BATTLEOFNABOO, lastData(result, GalacticDate.class));
-//	}
+	@Test
+	public void nowDefaultGET() {
+		List<GalacticWindow> result = listenFor(
+				"http://localhost:" + RestAssured.port + "/galacticstandardcalendar/now/2/2",
+				"",
+				GalacticWindow.class, 2);
+		assertAll("Should return each days in order",
+        	    () -> assertEquals(Atunda, 	result.get(0).getDates().keySet().iterator().next().getDay()),
+        	    () -> assertEquals(Elona,  	result.get(0).getDates().keySet().iterator().next().getPeriod()),
+        	    () -> assertEquals(Satunda, result.get(1).getDates().keySet().iterator().next().getDay()),
+        	    () -> assertEquals(Elona,  	result.get(1).getDates().keySet().iterator().next().getPeriod())
+        	);
+	}
+	
+	@Test
+	public void nowSavepointPOST() {
+		given()
+			.contentType("application/json")
+        	.when()
+        	.body(JsonbBuilder.create().toJson(GalacticCalendarSavePoint.of(Instant.now(), new GalacticDate(-35,2,2), Speed.PAUSE)))
+        	.post("/galacticstandardcalendar/now/1/2")
+        	.then()
+            .statusCode(200)
+            .body(containsString("data:{"));
+	}
 	
 	private <T> T lastData(String result, Class<T> clazz) {
 		JsonbConfig config = (new JsonbConfig()).withStrictIJSON(true);
