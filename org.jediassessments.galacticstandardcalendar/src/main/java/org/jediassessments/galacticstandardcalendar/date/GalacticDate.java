@@ -126,8 +126,8 @@ public class GalacticDate implements Temporal, Comparable<GalacticDate> {
 		return year;
 	}
 
-	public GalacticDateDay getDay() {
-		return GalacticDateDay.values()[day-1];
+	public Integer getDay() {
+		return day;
 	}
 	
 	private GalacticDatePeriod getPeriod(int mPeriod) {

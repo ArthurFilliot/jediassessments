@@ -1,6 +1,8 @@
 package org.jediassessments.galacticstandardcalendar.calendar;
 
-import java.time.Instant;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -8,27 +10,39 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 import org.jediassessments.galacticstandardcalendar.Service;
 import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
-import org.jediassessments.galacticstandardcalendar.window.GalacticWindow;
-import org.jediassessments.galacticstandardcalendar.window.GalacticWindowService;
+import org.jediassessments.galacticstandardcalendar.date.GalacticDateFormatter;
+import org.jediassessments.galacticstandardcalendar.now.NowService;
 
 import io.smallrye.mutiny.Multi;
 
 @ApplicationScoped
-public class GalacticStandardCalendarService implements Service {
+public class GalacticStandardCalendarService implements Service, GalacticDateFormatter {
 	
 	private static final Logger LOG = Logger.getLogger(GalacticStandardCalendarService.class);
 	
 	// Business Delegate
 	@Inject
-	private GalacticWindowService windowService;
+	private NowService windowService;
 	
-	public Multi<GalacticWindow> now(int count, int interval) {
+	public Multi<Map<Long,String>> now(int count, int interval) {
 		GalacticCalendarSavePoint savepoint = new GalacticCalendarSavePoint();
-		return windowService.now(savepoint.userInstant(), savepoint.galacticCalendarDate(), savepoint.speed(), count, interval);
+		var result = windowService.now(savepoint.userInstant(), savepoint.galacticCalendarDate(), savepoint.speed(), count, interval);
+		return result
+				.onItem()
+				.transform(this::format);
 	}
 	
-	public Multi<GalacticWindow> now(GalacticCalendarSavePoint savepoint, int count, int interval) {
-		return windowService.now(savepoint.userInstant(), savepoint.galacticCalendarDate(), savepoint.speed(), count, interval);
+	public Multi<Map<Long,String>> now(GalacticCalendarSavePoint savepoint, int count, int interval) {
+		var result = windowService.now(savepoint.userInstant(), savepoint.galacticCalendarDate(), savepoint.speed(), count, interval);
+		return result
+				.onItem()
+				.transform(this::format);
+	}
+	
+	private Map<Long, String> format(Map<Long, GalacticDate> now) {
+		return now.entrySet().stream()
+				.map(entry->Map.entry(entry.getKey(), format(entry.getValue())))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a,b)->a, TreeMap<Long, String>::new));
 	}
 
 }

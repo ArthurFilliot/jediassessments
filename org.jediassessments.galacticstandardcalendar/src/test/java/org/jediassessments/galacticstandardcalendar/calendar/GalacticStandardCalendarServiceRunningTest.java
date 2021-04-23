@@ -1,14 +1,19 @@
 package org.jediassessments.galacticstandardcalendar.calendar;
 
+import static io.restassured.RestAssured.given;
 import static org.awaitility.Awaitility.await;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -20,9 +25,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.sse.SseEventSource;
 
 import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
-import org.jediassessments.galacticstandardcalendar.date.GalacticDateDay;
-import org.jediassessments.galacticstandardcalendar.date.GalacticDateFormatterTest;
-import org.jediassessments.galacticstandardcalendar.window.GalacticWindow;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -34,12 +36,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.restassured.config.ObjectMapperConfig;
-
-import static org.jediassessments.galacticstandardcalendar.date.GalacticDateDay.*;
-import static org.jediassessments.galacticstandardcalendar.date.GalacticDatePeriod.*;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.*;
 
 @QuarkusTest
 public class GalacticStandardCalendarServiceRunningTest {
@@ -56,16 +52,14 @@ public class GalacticStandardCalendarServiceRunningTest {
 	
 	@Test
 	public void nowDefaultGET() {
-		List<GalacticWindow> result = listenFor(
+		@SuppressWarnings("unchecked")
+		List<Map<Long,String>> result = (List<Map<Long,String>>)(List<?>)listenFor(
 				"http://localhost:" + RestAssured.port + "/galacticstandardcalendar/now/2/2",
 				"",
-				GalacticWindow.class, 2);
+				TreeMap.class, 2);
 		assertAll("Should return each days in order",
-        	    () -> assertEquals(Atunda, 	result.get(0).getDates().keySet().iterator().next().getDay()),
-        	    () -> assertEquals(Elona,  	result.get(0).getDates().keySet().iterator().next().getPeriod()),
-        	    () -> assertEquals(Satunda, result.get(1).getDates().keySet().iterator().next().getDay()),
-        	    () -> assertEquals(Elona,  	result.get(1).getDates().keySet().iterator().next().getPeriod())
-        	);
+        	    () -> assertEquals("Atunda Elona -35",result.get(0).values().iterator().next()),
+        	    () -> assertEquals("Satunda Elona -35",result.get(1).values().iterator().next()));
 	}
 	
 	@Test
