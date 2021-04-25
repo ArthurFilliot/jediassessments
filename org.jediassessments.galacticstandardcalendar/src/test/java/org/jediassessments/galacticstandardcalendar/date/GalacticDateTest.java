@@ -35,4 +35,15 @@ public class GalacticDateTest {
 		
 		assertEquals(new GalacticDate(-34,1,1), plusFive);
 	}
+	
+	@Test
+	public void testPlusDaysExactlyTwoYears() {
+		GalacticDate start = GalacticDate.BATTLEOFNABOO;
+		GalacticDate plusTwoYears = start.plusYears(2);
+		GalacticDate plusFourYears = plusTwoYears.plusYears(2);
+		
+		assertEquals(new GalacticDate(-33,1,1), plusTwoYears);
+		assertEquals(new GalacticDate(-31,1,1), plusFourYears);
+
+	}
 }

@@ -51,6 +51,22 @@ public class NowServiceTest {
 	}
 	
 	@Test
+	public void nowFunYearsPerMinute() {
+		Instant now = Instant.ofEpochMilli(1619099001000L);
+		Multi<Map<Long, GalacticDate>> stream = service.now(now, GalacticDate.BATTLEOFNABOO, Speed.TWOYEARS_PER_MINUTE, 1, 5);
+		assertNotNull(stream);
+		assertEquals(List.of(
+			new TreeMap<>(Map.of(
+					 1619099001000L, new GalacticDate(-35, 1, 1), 
+					 1619099061000L, new GalacticDate(-33, 1, 1),
+					 1619099121000L, new GalacticDate(-31, 1, 1), 
+					 1619099181000L, new GalacticDate(-29, 1, 1), 
+					 1619099241000L, new GalacticDate(-27, 1, 1)
+			))),
+			stream.subscribe().asStream().collect(Collectors.toList()));
+	}
+	
+	@Test
 	public void nowFunDaysTestMultiple() {
 		Instant now = Instant.ofEpochMilli(1619099001000L);
 		Multi<Map<Long, GalacticDate>> stream = service.now(now, GalacticDate.BATTLEOFNABOO, Speed.ONEDAY_PER_SEC, 5, 5);

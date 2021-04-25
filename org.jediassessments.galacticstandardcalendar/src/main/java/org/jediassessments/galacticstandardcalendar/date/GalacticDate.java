@@ -78,6 +78,10 @@ public class GalacticDate implements Temporal, Comparable<GalacticDate> {
         return unit.addTo(this, amountToAdd);
 	}
 	
+	public GalacticDate plusYears(long yearsToAdd) {
+        return plusDays(Math.multiplyExact(yearsToAdd, lengthOfYear()));
+	}
+	
 	public GalacticDate plusWeeks(long weeksToAdd) {
         return plusDays(Math.multiplyExact(weeksToAdd, lengthOfWeek()));
     }
@@ -92,7 +96,7 @@ public class GalacticDate implements Temporal, Comparable<GalacticDate> {
         		return plusDays(this.year, this.period, dom);
         	} else {
         		int y = (int)(this.year + (dom / GalacticDatePeriod.getLenghtOfYear()));
-                dom = (dom % GalacticDatePeriod.getLenghtOfYear())+1;
+                dom = (dom % GalacticDatePeriod.getLenghtOfYear());
         		return plusDays(y, 1, dom);
         	}           
         }
@@ -103,6 +107,9 @@ public class GalacticDate implements Temporal, Comparable<GalacticDate> {
 		long periodLen = getPeriod(mPeriod).getNbDays();
 		int periodDayInYear = getPeriod(mPeriod).getDayInYear();
 		if (dom < periodDayInYear + periodLen) {
+			if (dom==0) {
+				return new GalacticDate(mYear, mPeriod, periodDayInYear);
+			}
             return new GalacticDate(mYear, mPeriod, (int)(dom - periodDayInYear)+1);
         }
 		mPeriod++;
@@ -115,6 +122,10 @@ public class GalacticDate implements Temporal, Comparable<GalacticDate> {
 	
 	public int lengthOfWeek() {
 		return 5;
+	}
+	
+	public int lengthOfYear() {
+		return GalacticDatePeriod.getLenghtOfYear();
 	}
 
 	@Override
@@ -131,7 +142,11 @@ public class GalacticDate implements Temporal, Comparable<GalacticDate> {
 	}
 	
 	private GalacticDatePeriod getPeriod(int mPeriod) {
-		return GalacticDatePeriod.values()[mPeriod-1];
+		try {
+			return GalacticDatePeriod.values()[mPeriod-1];
+		}catch(ArrayIndexOutOfBoundsException e) {
+			throw e;
+		}
 	}
 	
 	public GalacticDatePeriod getPeriod() {
