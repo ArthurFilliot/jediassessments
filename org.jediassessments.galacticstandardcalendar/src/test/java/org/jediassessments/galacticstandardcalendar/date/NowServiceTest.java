@@ -1,4 +1,4 @@
-package org.jediassessments.galacticstandardcalendar.now;
+package org.jediassessments.galacticstandardcalendar.date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,10 +10,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.jediassessments.galacticstandardcalendar.calendar.Speed;
-import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
-import org.jediassessments.galacticstandardcalendar.date.GalacticDateService;
-import org.jediassessments.galacticstandardcalendar.date.RealTimeService;
-import org.jediassessments.galacticstandardcalendar.now.NowService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,12 +22,12 @@ public class NowServiceTest {
 	@BeforeEach
 	public void init() {
 		GalacticDateService galacticDateService = new GalacticDateService();
-		galacticDateService.setTimeService(new RealTimeService () {
+		galacticDateService.timeService = new RealTimeService () {
 			public Instant now() {
 				return Instant.ofEpochMilli(1619099001000L);
 			}
-		});
-		service.setDateService(galacticDateService);
+		};
+		service.dateService = galacticDateService;
 	}
 	
 	@Test

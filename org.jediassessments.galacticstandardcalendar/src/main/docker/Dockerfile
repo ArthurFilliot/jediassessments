@@ -1,12 +1,15 @@
 # Stage 1 : build with maven image
 FROM maven:3.6.3-openjdk-15 AS build
-COPY pom.xml /usr/src/app/
+ARG REPOCACHEVERSION=0
 COPY pom.xml /usr/bootstrap/
 COPY src/main/docker/BootstrapTest.java /usr/bootstrap/src/test/java/
-COPY src /usr/src/app/src
 RUN mvn -f /usr/bootstrap/pom.xml clean package && rm -r /usr/bootstrap/target
-ARG CHECKPOINT=reset
-RUN MAVEN_OPTS="--enable-preview" mvn -f /usr/src/app/pom.xml clean package
+ARG BUILDCACHEVERSION=0
+ARG SKIPTESTS=false
+COPY pom.xml /usr/src/app/
+COPY src /usr/src/app/src
+RUN mvn -f /usr/src/app/pom.xml clean test -Dmaven.test.skip=${SKIPTESTS}
+RUN MAVEN_OPTS="--enable-preview" mvn -f /usr/src/app/pom.xml package -Dmaven.test.skip=true
 
 # Stage 2 : create the docker final image
 FROM adoptopenjdk/openjdk15:jre-15.0.2_7-alpine 

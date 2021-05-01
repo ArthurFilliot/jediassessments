@@ -19,7 +19,7 @@ public class GalacticDateServiceTest {
 	
 	@BeforeEach
 	public void init() {
-		service.setTimeService(new RealTimeService());
+		service.timeService = new RealTimeService();
 	}
 	
 	@Test

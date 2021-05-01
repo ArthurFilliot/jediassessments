@@ -1,4 +1,4 @@
-package org.jediassessments.galacticstandardcalendar.now;
+package org.jediassessments.galacticstandardcalendar.date;
 
 import java.time.Instant;
 import java.util.LinkedList;
@@ -16,8 +16,6 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 import org.jediassessments.galacticstandardcalendar.Service;
 import org.jediassessments.galacticstandardcalendar.calendar.Speed;
-import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
-import org.jediassessments.galacticstandardcalendar.date.GalacticDateService;
 
 import io.smallrye.mutiny.Multi;
 
@@ -28,11 +26,7 @@ public class NowService implements Service {
 
 	// Business Delegate
 	@Inject
-	private GalacticDateService dateService;
-
-	public void setDateService(GalacticDateService dateService) {
-		this.dateService = dateService;
-	}
+	GalacticDateService dateService;
 	
 	private Supplier<Long> createEpochMilliIterator(Instant userInstant, Speed speed) {
 		return switch(speed) {

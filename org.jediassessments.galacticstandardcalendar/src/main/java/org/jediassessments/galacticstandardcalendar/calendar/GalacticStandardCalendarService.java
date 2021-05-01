@@ -11,7 +11,7 @@ import org.jboss.logging.Logger;
 import org.jediassessments.galacticstandardcalendar.Service;
 import org.jediassessments.galacticstandardcalendar.date.GalacticDate;
 import org.jediassessments.galacticstandardcalendar.date.GalacticDateFormatter;
-import org.jediassessments.galacticstandardcalendar.now.NowService;
+import org.jediassessments.galacticstandardcalendar.date.NowService;
 
 import io.smallrye.mutiny.Multi;
 
@@ -22,7 +22,7 @@ public class GalacticStandardCalendarService implements Service, GalacticDateFor
 	
 	// Business Delegate
 	@Inject
-	private NowService windowService;
+	NowService windowService;
 	
 	public Multi<Map<Long,String>> now(int count, int interval) {
 		GalacticCalendarSavePoint savepoint = new GalacticCalendarSavePoint();

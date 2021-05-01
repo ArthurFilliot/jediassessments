@@ -17,11 +17,7 @@ public class GalacticDateService implements Service {
 	
 	// Business Delegate
 	@Inject
-	private RealTimeService timeService;
-	
-	public void setTimeService(RealTimeService timeService) {
-		this.timeService = timeService;
-	}
+	RealTimeService timeService;
 	
 	public GalacticDate next(GalacticDate from, Speed speed, Long nbSeconds) {
 		BiFunction<GalacticDate, Long, GalacticDate> tickfun = 
