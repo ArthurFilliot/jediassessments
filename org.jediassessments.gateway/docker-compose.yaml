@@ -4,15 +4,21 @@ services:
     image: nginx
     container_name: gateway
     extra_hosts:
-        - "host.docker.internal:host-gateway"
+        - 'host.docker.internal:host-gateway'
     volumes:
         - ./nginx.conf:/etc/nginx/nginx.conf
-        # - ./proxy_params:/etc/nginx/proxy_params
     ports:
         - 80:80
 
   galacticstandardcalendar:
-    image: jediassessments/galacticstandardcalendar
+    build: 
+        context: ../org.jediassessments.galacticstandardcalendar
+        dockerfile: src/main/docker/Dockerfile
+        network: host
+        args:
+            BUILDCACHEVERSION: '${NOW}'
+            SKIPTESTS: 'true'
+    image: 'jediassessments/galacticstandardcalendar:latest'
     container_name: galacticstandardcalendar
     ports:
         - 8080:8080
