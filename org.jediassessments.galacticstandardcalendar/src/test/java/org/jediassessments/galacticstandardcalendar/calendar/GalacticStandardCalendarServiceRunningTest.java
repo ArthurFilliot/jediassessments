@@ -58,8 +58,8 @@ public class GalacticStandardCalendarServiceRunningTest {
 				"",
 				TreeMap.class, 2);
 		assertAll("Should return each days in order",
-        	    () -> assertEquals("Atunda Elona -35",result.get(0).values().iterator().next()),
-        	    () -> assertEquals("Satunda Elona -35",result.get(1).values().iterator().next()));
+        	    () -> assertEquals("Atunda 1 Elona -35",result.get(0).values().iterator().next()),
+        	    () -> assertEquals("Satunda 3 Elona -35",result.get(1).values().iterator().next()));
 	}
 	
 	@Test
