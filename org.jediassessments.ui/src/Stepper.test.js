@@ -5,9 +5,9 @@ import { act } from 'react-dom/test-utils';
 import sseMock from './EventSourceMock.js';
 
 function* mockedReponses() {
-  yield {data:'{"dates":[{"key":{"day":1,"period":1,"year":-35},"value":"Active"},{"key":{"day":2,"period":1,"year":-35},"value":"None"},{"key":{"day":3,"period":1,"year":-35},"value":"None"},{"key":{"day":4,"period":1,"year":-35},"value":"None"},{"key":{"day":5,"period":1,"year":-35},"value":"None"}]}'}
-  yield {data:'{"dates":[{"key":{"day":1,"period":1,"year":-35},"value":"Completed"},{"key":{"day":2,"period":1,"year":-35},"value":"Active"},{"key":{"day":3,"period":1,"year":-35},"value":"None"},{"key":{"day":4,"period":1,"year":-35},"value":"None"},{"key":{"day":5,"period":1,"year":-35},"value":"None"}]}'}
-  yield {data:'{"dates":[{"key":{"day":1,"period":1,"year":-35},"value":"Completed"},{"key":{"day":2,"period":1,"year":-35},"value":"Completed"},{"key":{"day":3,"period":1,"year":-35},"value":"Active"},{"key":{"day":4,"period":1,"year":-35},"value":"None"},{"key":{"day":5,"period":1,"year":-35},"value":"None"}]}'}
+  yield {data:'{"1620074242314":"Atunda 1 Elona -35","1620074243314":"Katunda 2 Elona -35","1620074244314":"Satunda 3 Elona -35","1620074245314":"Datunda 4 Elona -35","1620074246314":"Natunda 5 Elona -35"}'}
+  yield {data:'{"1620074247314":"Atunda 6 Elona -35","1620074248314":"Katunda 7 Elona -35","1620074249314":"Satunda 8 Elona -35","1620074250314":"Datunda 9 Elona -35","1620074251314":"Natunda 10 Elona -35"}'}
+  yield {data:'{"1620074252314":"Atunda 11 Elona -35","1620074253314":"Katunda 12 Elona -35","1620074254314":"Satunda 13 Elona -35","1620074255314":"Datunda 14 Elona -35","1620074256314":"Natunda 15 Elona -35"}'}
   yield {type:'end'};
 };
 sseMock.responsesGen = mockedReponses();

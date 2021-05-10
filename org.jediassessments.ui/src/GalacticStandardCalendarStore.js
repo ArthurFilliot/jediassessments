@@ -10,9 +10,9 @@ export const galacticStandardCalendarReducer = handleActions(
             if (state.running) {
                 let clientNow = action.payload.clientNow
                 let mGalacticWindow = (action.payload.window) ? action.payload.window : state.galacticWindow;
-                state.nowIndex = mGalacticWindow.dates.findIndex(entry => Math.abs(clientNow - entry.value) < 1000);
+                state.nowIndex = Object.entries(mGalacticWindow).findIndex(date => Math.abs(clientNow - date[0]) < 1000);
                 if (state.nowIndex == -1) {
-                    state.nowIndex = state.galacticWindow.dates.length-1;
+                    state.nowIndex = Object.entries(mGalacticWindow).length-1;
                 }
                 state.galacticWindow = mGalacticWindow;
             }
@@ -31,7 +31,6 @@ export const galacticStandardCalendarReducer = handleActions(
         running: false,
     }
 );
-export const storeWindow = createAction('STORE_WINDOW');
 export const storeNow = createAction('STORE_NOW');
 export const storeStart = createAction('START');
 export const storeStop = createAction('STOP');
@@ -42,7 +41,7 @@ const galacticStandardCalendarStore = createStore(galacticStandardCalendarReduce
 export function update(clientNow, mGalacticWindow, start) {  
     let payload = {'clientNow':clientNow}
     if (mGalacticWindow) {
-        payload.window = mGalacticWindow;
+        payload.window = refreshRateStabilization(mGalacticWindow,3000);
     }
     if (start===true) {
         payload.running = true;
@@ -64,4 +63,18 @@ export function start(clientNow) {
 export function stop() {
     clearInterval(timer);
     galacticStandardCalendarStore.dispatch(storeStop());
+}
+
+function refreshRateStabilization(mGalacticWindow, minInterval) {
+    let initEntry = Object.entries(mGalacticWindow)[0]
+    let entries = Object.entries(mGalacticWindow).slice(1)
+    return entries.reduce((prev, curr) => {
+        let prevKey = Object.entries(prev)[Object.entries(prev).length-1][0]
+        let currKey = curr[0];
+        let currValue = curr[1]; 
+        if (currKey - prevKey >= minInterval) {
+            return {...prev, [currKey]:currValue}
+        }
+        return {...prev};
+    }, {[initEntry[0]]:initEntry[1]});
 }
