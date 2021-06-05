@@ -1,3 +1,3 @@
 # Catch the Vador mini-game
 
-This is to illustrate the use of IntersactionObserver : what it is and whant it is not
+This is to illustrate the use of IntersectionObserver : what it is and whant it is not
