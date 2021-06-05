@@ -1,0 +1,91 @@
+body { overflow: hidden }
+
+.div {
+    border:1px solid black;
+    margin: 0;
+    padding: 0;
+}
+#background {
+    width: 1000px;
+    height: 600px;
+    background: lightgray;
+}
+#board {
+    margin-top:2px;
+    width: 1000px;
+    height: 100px;
+    background: gray;
+}
+
+#sight {
+    width:100px;
+    height:100px;
+    
+    position: relative;
+    top: 41%;
+    left: 45%;
+
+    z-index: 1;
+}
+
+#vador {
+    position: relative;
+    width:60px;
+}
+
+#hid {
+    width: 1000px;
+    display: flex;
+    flex-direction:row;
+}
+
+#tabarrows {
+    border-collapse: separate; 
+    float:left;
+}
+
+#tabarrows td {
+    text-align: center;
+    border:1px solid black;
+}
+
+.default {
+    background: white; 
+    color: black;
+}
+
+.pressed {
+    background: black; 
+    color:white;
+}
+
+#tabpositions {
+    border-collapse: separate; 
+}
+
+#tabpositions td {
+    position: relative; 
+}
+
+/*#tabpositions div {
+    border:1px solid black;
+}*/
+
+#posTopGauge {
+    width: 10px;
+    position: absolute;
+    bottom: 0;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: black;
+}
+
+#posLeftGauge {
+    position: absolute;
+    left:0;
+    bottom:0;
+    height:10px;
+    border-left-width: 10px;
+    border-left-style: solid;
+    border-left-color: black;
+}

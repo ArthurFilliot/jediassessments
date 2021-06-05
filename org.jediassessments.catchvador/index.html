@@ -1,0 +1,183 @@
+<html>
+<head>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div id="hid">
+    <div id="arrows">
+        <table id="tabarrows">
+            <tr>
+                <td colspan="3" class="default" id="uarr">&uarr;</td>
+            </tr>
+            <tr>
+                <td class="default" id="larr">&larr;</td>
+                <td class="default" id="darr">&darr;</td>
+                <td class="default" id="rarr">&rarr;</td>
+            </tr>
+        </table>
+    </div>
+    <div id="positions">
+        <table id="tabpositions">
+            <tr>
+                <td width="10px" height="47px" rowspan="2"><div id="posTopGauge"></div></td>
+                <td></td>
+            </tr>
+            <tr> 
+                <td height="10px" width="70px"><div id="posLeftGauge"></div></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="background">
+    <div id="sight" draggable="true">
+        <img src="saber_trsp.gif" height="100%" width="100%"/>
+        <img src="sight.png" height="100%" width="100%"/>
+    </div>
+    <div id="vador">
+        <img src="vador.jpg" height="60px" />
+    </div>
+</div>
+
+<script>
+    var leftpressed = false;
+    var uppressed = false;
+    var rightpressed = false;
+    var downpressed = false;
+    var saberhitting = false;
+    var eleSight = document.getElementById("sight");
+    var uarr = document.getElementById("uarr");
+    var larr = document.getElementById("larr");
+    var darr = document.getElementById("darr");
+    var rarr = document.getElementById("rarr");
+    var posLeftGauge = document.getElementById("posLeftGauge");
+    var posTopGauge = document.getElementById("posTopGauge");
+    var vador = document.getElementById("vador");
+    document.onkeydown = function (event) {
+        defineMove(event.keyCode, true);
+    };
+    document.onkeyup = function (event) {
+        defineMove(event.keyCode, false);
+    };
+    function defineMove(keycode, state) {
+        switch (keycode) {
+            case 37:
+             leftpressed = state;
+             break;
+          case 38:
+             uppressed = state;
+             break;
+          case 39:
+             rightpressed = state;
+             break;
+          case 40:
+             downpressed = state;
+             break;
+          case 32:
+             saberhitting = state;
+             break;
+          default:
+               // console.log(keycode);
+        }
+    }
+    var posLeft = 45
+    var posTop = 41
+    var frameRefresh
+    frameRefresh = window.setInterval(function() {
+        let newPosLeft = posLeft;
+        let newPosTop = posTop;
+        if (leftpressed) {
+            newPosLeft = newPosLeft - 1;
+        }
+        if (uppressed) {
+            newPosTop = newPosTop - 1;
+        }
+        if (rightpressed) {
+            newPosLeft = newPosLeft + 1;
+        }
+        if (downpressed) {
+            newPosTop = newPosTop + 1;
+        }
+        newPosLeft = newPosLeft > 90 ? 90 : newPosLeft;
+        newPosLeft = newPosLeft < 0 ? 0 : newPosLeft;
+        newPosTop = newPosTop > 83 ? 83 : newPosTop;
+        newPosTop = newPosTop < 0 ? 0 : newPosTop;
+        //console.log(leftpressed + " / " + uppressed +" / " + rightpressed + " / " + downpressed + "\nbefore move : " + posLeft + " / " + posTop +" - after move : " + newPosLeft + " / " + newPosTop);
+        larr.className = leftpressed ? "pressed" : "default";
+        uarr.className = uppressed ? "pressed" : "default";
+        rarr.className = rightpressed ? "pressed" : "default";
+        darr.className = downpressed ? "pressed" : "default";
+        posLeft = newPosLeft
+        posTop = newPosTop
+        eleSight.style.left = newPosLeft + '%';
+        eleSight.style.top = newPosTop + '%';
+        posLeftGauge.style.borderLeftWidth = (70 * newPosLeft / 100) + 'px';
+        posTopGauge.style.borderBottomWidth = (47 * newPosTop / 100) + 'px';
+        eleSight.children[0].style.display = saberhitting ? "block" : 'none';
+        eleSight.children[1].style.display = saberhitting ? "none" : 'block';
+        
+        let diffLeft  = (parseInt(eleSight.style.left.replace('%',''))-parseInt(vador.style.left.replace('%','')));
+        let diffRight = (parseInt(eleSight.style.top.replace('%',''))-parseInt(vador.style.top.replace('%','')));
+        if (diffLeft>-5 && diffLeft<10 && diffRight>=10 && diffRight<20) {
+            console.log("touched");
+            if (saberhitting) {
+                var vadordown
+                vadordown = setInterval(function(){
+                    vador.children[0].style.transform = "rotate(90deg)";
+                    clearInterval(vadordown);
+                }, 300);
+                var vadorexit
+                vadorexit =setInterval(function(){
+                    vador.style.display = "none";
+                    vador.children[0].style.transform = "rotate(0deg)";
+                    clearInterval(vadorexit);
+                },1000);
+                var vadorreborn
+                vadorreborn =setInterval(function(){
+                    replaceVador();
+                    vador.style.display = "block";
+                    touched = false
+                    clearInterval(vadorreborn);
+                },1000);
+            }else{
+                replaceVador();
+            }
+        }
+        /*console.log("eleSight : " + eleSight.style.left + " / "+ eleSight.style.top + "\n" +
+        "vador : " + vador.style.left + " / "+ vador.style.top + "\n" +
+        "diff : " + (parseInt(eleSight.style.left.replace('%',''))-parseInt(vador.style.left.replace('%',''))) + " / " +
+        (parseInt(eleSight.style.top.replace('%',''))-parseInt(vador.style.top.replace('%',''))));
+        //clearInterval(frameRefresh);*/
+    },10);
+
+    function replaceVador() {
+        vador.style.left = Math.floor(Math.random() * 100) + '%';
+        vador.style.top = Math.floor(Math.random() * 100) + '%';
+    }
+
+    function checkReplace() {
+        vador.style.left = vador.style.left;
+        vador.style.top = vador.style.top;
+    }
+
+    var observer = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(entry => {
+            console.log(
+                entry.boundingClientRect + " / " + 
+                entry.intersectionRatio + " / " +
+                entry.intersectionRect + " / " +
+                "isIntersecting : " + entry.isIntersecting + " / " +
+                entry.rootBounds + " / " +
+                entry.target + " / " +
+                entry.time);
+            if (entry.target===vador && !entry.isIntersecting) {
+                console.log("outside");
+                replaceVador();
+            }
+        });
+
+    }, {root: background, rootMargin: '0px', threshold: 1.0});
+    observer.observe(vador);
+    replaceVador();
+ </script>
+</body>
+</html>
